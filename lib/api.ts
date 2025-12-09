@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Note, NoteFormValues } from "../types/note";
+import type { Note, NoteFormValues, NoteTag } from "../types/note";
 
 interface FetchNotesResponse {
   notes: Note[];
@@ -11,13 +11,15 @@ const myToken = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
 export const fetchNotes = async (
   search: string,
-  page: number
+  page: number,
+  categoryId?: NoteTag
 ): Promise<FetchNotesResponse> => {
   const response = await axios.get<FetchNotesResponse>("/notes", {
     params: {
       search: search,
       page: page,
       perPage: 12,
+      tag: categoryId,
     },
     headers: {
       Authorization: `Bearer ${myToken}`,

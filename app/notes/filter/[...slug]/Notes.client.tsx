@@ -13,8 +13,13 @@ import Loader from "@/components/Loader/Loader";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 import css from "./NotesPage.module.css";
 import { fetchNotes } from "@/lib/api";
+import { NoteTag } from "@/types/note";
 
-function NotesClient() {
+interface NotesClientProps {
+  category: NoteTag | undefined;
+}
+
+function NotesClient({ category }: NotesClientProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -28,8 +33,11 @@ function NotesClient() {
   );
 
   const { data, error, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ["notes", { searchQuery: searchQuery, page: currentPage }],
-    queryFn: () => fetchNotes(searchQuery, currentPage),
+    queryKey: [
+      "notes",
+      { searchQuery: searchQuery, page: currentPage, category: category },
+    ],
+    queryFn: () => fetchNotes(searchQuery, currentPage, category),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
