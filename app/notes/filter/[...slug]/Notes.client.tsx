@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NoteList from "@/components/NoteList/NoteList";
 import Pagination from "@/components/Pagination/Pagination";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import Modal from "@/components/Modal/Modal";
 import NoteForm from "@/components/NoteForm/NoteForm";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import SearchBox from "@/components/SearchBox/SearchBox";
 import { useDebouncedCallback } from "use-debounce";
 import Loader from "@/components/Loader/Loader";
@@ -44,11 +44,11 @@ function NotesClient({ category }: NotesClientProps) {
 
   const totalPages = data?.totalPages ?? 0;
 
-  useEffect(() => {
-    if (data && data.notes.length === 0) {
-      toast.error("No notes found for your request.");
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data && data.notes.length === 0) {
+  //     toast.error("No notes found for your request.");
+  //   }
+  // }, [data]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -76,6 +76,18 @@ function NotesClient({ category }: NotesClientProps) {
       </header>
       {isLoading && <Loader />}
       {isError && <ErrorMessage errorInfo={error} />}
+      {data && data.notes.length === 0 && (
+        <p
+          style={{
+            color: "red",
+            fontSize: "18px",
+            padding: "20px",
+            textAlign: "center",
+          }}
+        >
+          No notes found for your request.
+        </p>
+      )}
       {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
       {isModalOpen && (
         <Modal onClose={closeModal}>
